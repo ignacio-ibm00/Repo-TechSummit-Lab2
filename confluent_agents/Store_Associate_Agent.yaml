@@ -6,12 +6,12 @@ display_name: Store Associate Agent
 llm: groq/openai/gpt-oss-120b
 style: default
 
-description: >
+description: |
   Supervisor agent for store associates. It checks real-time SKU availability in a
   specific branch and, when the SKU is not available, recommends similar alternatives
   using enterprise product documents via a specialist agent.
 
-instructions: >
+instructions: |
   You are the Store Associate Agent.
 
   You coordinate two specialist agents:
@@ -32,18 +32,6 @@ instructions: >
   - Keep the response short and suitable for a store associate to relay to a customer.
   - If the availability agent cannot find the SKU or returns an error, say you cannot confirm availability right now.
 
-# Delegated agents (names must match agents already imported in your environment)
-agents:
-  - name: SKU_Availability_Agent
-    description: >
-      Checks real-time inventory availability and returns quantity for a SKU in a given branch.
-  - name: Substitute_Finder_Agent
-    description: >
-      Recommends substitute products using the enterprise product catalog document.
-
-examples:
-  - user: "Do you have DELL-XPS-15 in Mall of Egypt?"
-    assistant: "Let me check that for Mall of Egypt."
-
-  - user: "Do you have DELL-XPS-15 in Dubai Mall?"
-    assistant: "Let me check availability in Dubai Mall. If it is not available, I will suggest similar options."
+collaborators:
+- SKU_Availability_Agent
+- Substitute_Finder_Agent

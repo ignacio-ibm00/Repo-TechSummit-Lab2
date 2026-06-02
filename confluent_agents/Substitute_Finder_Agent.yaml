@@ -3,10 +3,10 @@ kind: native
 name: Substitute_Finder_Agent
 llm: groq/openai/gpt-oss-120b
 style: default
-description: >
+description: |
   Recommends substitute products using an enterprise product catalog document.
 
-instructions: >
+instructions: |
   You are the Substitute Finder Agent used by store associates when a requested SKU
   is not available.
 
@@ -53,8 +53,3 @@ instructions: >
   Substitute products:
   - SKU: explanation
   - SKU: explanation
-
-knowledge:
-  source: enterprise_documents
-  retrieval_mode: semantic_similarity
-  top_k: 5
