@@ -17,34 +17,7 @@ En este paso, vas a crear la herramienta MCP y el agente de IA en **watsonx Orch
 
 Para más detalles sobre cómo usar Bob para crear herramientas MCP y agentes, revisá este tutorial: [Usando IBM Bob para construir agentes de watsonx Orchestrate y herramientas MCP](https://developer.ibm.com/tutorials/build-agents-mcp-tools-watsonx-orchestrate-using-bob/).
 
-## Copiá el archivo .env del Lab 1
-
-Este lab necesita un archivo `.env` con las variables de conexión al clúster de Confluent (Kafka + ksqlDB). Las dos variables clave son:
-
-
-| Variable            | Descripción                                                                       |
-| ------------------- | ---------------------------------------------------------------------------------- |
-| `BOOTSTRAP_SERVERS` | Dirección del broker de Kafka (ej.`localhost:9092`)                               |
-| `KSQLDB_ENDPOINT`   | URL del servidor ksqlDB para consultas en tiempo real (ej.`http://localhost:8088`) |
-
-No se necesitan credenciales adicionales porque el clúster corre en un entorno local aislado.
-
-**Si hiciste el Lab 1**, ese archivo ya existe — copialo a la carpeta `confluent-agents`:
-
-```bash
-cp /ruta/al/Lab1/inventory-pipeline/.env confluent-agents/.env
-```
-
-> Reemplazá `/ruta/al/Lab1` con la ruta absoluta donde tenés el Lab 1 en tu máquina.
-
-**Si no hiciste el Lab 1**, creá manualmente el archivo `confluent-agents/.env` con este contenido:
-
-```env
-BOOTSTRAP_SERVERS= *****
-KSQLDB_ENDPOINT=****
-```
-
-> Ajustá los valores si tu clúster de Confluent usa puertos o direcciones distintas.
+## 
 
 ## Importá la herramienta MCP en watsonx Orchestrate
 
@@ -55,7 +28,7 @@ El comando registra el script `get_sku_availability.py` como una herramienta lla
 Reemplazá `/Users/ahmedazraq/Documents/git/oic-i-agentic-ai-tutorials/confluent-agents` con la **ruta absoluta** de tu proyecto.
 
 ```bash
-orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --package-root "/Users/ahmedazraq/Documents/git/oic-i-agentic-ai-tutorials/confluent-agents" --command "python3 get_sku_availability.py" --tools "*"
+orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --command "python3 get_sku_availability.py" --tools "*"
 ```
 
 ## Importá el agente
