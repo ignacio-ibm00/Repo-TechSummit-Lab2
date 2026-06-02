@@ -1,6 +1,10 @@
-# Antes de empezar: Cloná el repositorio
+# Prerrequisitos
 
-Antes de ejecutar cualquier comando, necesitás clonar el repositorio oficial del tutorial y posicionarte en la carpeta del proyecto:
+Antes de comenzar con el tutorial, completá los siguientes pasos :
+
+## Prerrequisito 1: Cloná el repositorio
+
+Cloná el repositorio oficial del tutorial y posicionate en la carpeta del proyecto:
 
 ```bash
 git clone https://github.com/IBM/oic-i-agentic-ai-tutorials
@@ -11,13 +15,119 @@ cd oic-i-agentic-ai-tutorials/confluent-agents
 
 ---
 
+## Prerrequisito 2: Creá tu IBM Cloud API Key
+
+Necesitás crear una **API Key de IBM Cloud** para autenticarte y acceder a los servicios necesarios para este laboratorio.
+
+### Pasos para crear la API Key
+
+1. Iniciá sesión en tu cuenta de IBM Cloud: [https://cloud.ibm.com/login](https://cloud.ibm.com/login)
+
+2. En el menú **Gestionar**, seleccioná **Acceso (IAM)**.
+
+   ![Paso 2: Access IAM](assets/cloud_inicio.png)
+
+3. En el menú **Claves de API**, hacé clic en el botón **Crear**.
+
+   ![Paso 3: Create API Key](assets/crear_api_key.png)
+
+4. Ingresá un nombre para tu API Key.
+
+   ![Paso 4: Guardar API Key](assets/guardar_api_key.png)
+
+5. Hacé clic en **Crear** para generar tu API Key.
+
+6. **Importante:** Copiá y guardá tu API Key en un lugar seguro. No vas a poder verla nuevamente después de cerrar esta ventana.
+
+> **Nota de seguridad:** Tratá tu API Key como una contraseña. No la compartas públicamente ni la subas a repositorios de código.
+
+---
+
+## Prerrequisito 3: Instalá y configurá el ADK de watsonx Orchestrate
+
+Instalá y configurá el **Agent Development Kit (ADK)** de watsonx Orchestrate para poder importar herramientas y agentes desde la línea de comandos.
+
+### 3.1. Instalá el ADK
+
+Ejecutá el siguiente comando para instalar o actualizar el ADK:
+
+```bash
+pip install --upgrade ibm-watsonx-orchestrate
+```
+
+### 3.2. Creá y activá tu ambiente
+
+El ADK usa el concepto de "ambientes" para gestionar diferentes instancias de watsonx Orchestrate. Seguí estos pasos:
+
+**a) Creá un nuevo ambiente:**
+
+```bash
+orchestrate env create <nombre_del_ambiente>
+```
+
+Reemplazá `<nombre_del_ambiente>` con un nombre descriptivo, por ejemplo: `labtech` o `mi-ambiente-wxo`
+
+**b) Activá el ambiente:**
+
+```bash
+orchestrate env add -n <nombre_del_ambiente> -u <url-instancia-de-servicio>
+```
+
+> **¿Cómo obtener la URL de tu instancia?** En IBM Cloud, andá a: Menú hamburguesa → Lista de recursos → Seleccioná tu instancia de watsonx Orchestrate. La URL aparecerá en el panel de detalles. (Los pasos detallados con imágenes están en la sección "Accedé a watsonx Orchestrate" más adelante).
+
+**c) Ingresá tu API Key:**
+
+Cuando se te solicite, ingresá la **API Key de IBM Cloud** que creaste en el Prerrequisito 2.
+
+**d) Seleccioná tu instancia de watsonx Orchestrate:**
+
+El comando te mostrará una lista de instancias disponibles. Seleccioná la que vas a usar para este lab.
+
+**e) Verificá la configuración:**
+
+```bash
+orchestrate env list
+```
+
+Deberías ver tu ambiente listado y marcado como activo.
+
+> **Importante:** Guardá el nombre de tu ambiente, lo vas a necesitar si el token expira durante el lab (ver sección de Troubleshooting al final del tutorial).
+
+Para más detalles, consultá la [documentación oficial](https://developer.watson-orchestrate.ibm.com/getting_started/installing).
+
+---
+
+## Prerrequisito 4: Configuración de Confluent Cloud (Condicional)
+
+**Este paso es solo necesario si NO participaste del Lab 1 de Confluent.**
+
+En el lab anterior se configuró la capa de eventos en tiempo real utilizando Apache Kafka sobre Confluent Cloud. Se creó un tópico Kafka para recibir eventos de inventario, se configuró el procesamiento necesario para mantener una vista actualizada de disponibilidad y se publicaron mensajes de ejemplo que simulan movimientos de stock.
+
+La idea es que watsonx Orchestrate trabaje con datos operacionales actualizados en tiempo real. Durante este lab, el agente consultará la información generada desde Confluent para analizar el estado actual del inventario y tomar decisiones con mayor contexto.
+
+### Si no participaste del Lab 1
+
+Ejecutá el siguiente comando para crear automáticamente los recursos necesarios:
+
+```bash
+cd confluent_agents
+python3 setup_topic_with_samples.py
+```
+
+Este comando generará:
+- Tópico Kafka `inventory.transactions`
+- Configuración de procesamiento
+- Eventos de ejemplo (20 transacciones de inventario)
+
+> **Nota:** Asegurate de tener configurado correctamente el archivo `.env` con tus credenciales de Confluent Cloud antes de ejecutar el comando.
+
+---
+
 # Paso 1. Creá la herramienta MCP y el agente de IA en watsonx Orchestrate
 
 En este paso, vas a crear la herramienta MCP y el agente de IA en **watsonx Orchestrate**. Las configuraciones de la herramienta MCP y del agente de IA fueron creadas y validadas con la ayuda de **IBM Bob**.
 
 Para más detalles sobre cómo usar Bob para crear herramientas MCP y agentes, revisá este tutorial: [Usando IBM Bob para construir agentes de watsonx Orchestrate y herramientas MCP](https://developer.ibm.com/tutorials/build-agents-mcp-tools-watsonx-orchestrate-using-bob/).
-
-## 
 
 ## Importá la herramienta MCP en watsonx Orchestrate
 
@@ -41,6 +151,34 @@ orchestrate agents import -f sku-availability-agents.yaml
 
 Una vez completada la importación, desplegá el agente desde la UI de watsonx Orchestrate para que quede activo:
 
+## Accedé a watsonx Orchestrate
+
+Si es la primera vez que accedés a watsonx Orchestrate, seguí estos pasos:
+
+1. Accedé desde el dashboard de IBM Cloud: 👉 [https://cloud.ibm.com](https://cloud.ibm.com)
+
+2. Hacé clic en el menú de hamburguesa
+
+   ![Menú hamburguesa](assets/menu_hamburguesa.png)
+
+3. Seleccioná **Lista de recursos**
+
+   ![Lista de recursos](assets/lista_recursos.png)
+
+4. Seleccioná la instancia de **watsonx Orchestrate**
+
+   ![Selección de instancia](assets/seleccion_instancia.png)
+
+5. Hacé clic en **Iniciar watsonx Orchestrate**
+
+   ![Launch watsonx Orchestrate](assets/launch_wxo.png)
+
+6. Andá a **Administrar agentes**
+
+   ![UI de watsonx Orchestrate](assets/wxo_ui.png)
+
+## Desplegá el agente
+
 1. En el menú lateral izquierdo, hacé clic en **Build**
 2. Vas a ver el agente `SKU_Availability_Agent` que acabás de importar — hacé clic en él
 3. En la esquina superior derecha, hacé clic en **Deploy**
@@ -48,15 +186,15 @@ Una vez completada la importación, desplegá el agente desde la UI de watsonx O
 
 ## Probá el agente
 
-1. Abrí la interfaz de **watsonx Orchestrate**
-2. Andá a **Administrar agentes**
-3. Hacé clic en **SKU_Availability_Agent**
-4. Observá que la herramienta MCP ya está importada
-5. Revisá el comportamiento del agente
+Desde la sección **Administrar agentes**:
+
+1. Hacé clic en **SKU_Availability_Agent**
+2. Observá que la herramienta MCP ya está importada
+3. Revisá el comportamiento del agente
 
 **Pregunta de prueba:**
 
-> ¿Cuáles son los SKUs disponibles en Mall of Egypt?
+> ¿Cuáles son los SKUs disponibles en el Dot Shopping?
 
 **Respuesta esperada:** El agente devuelve una tabla con la disponibilidad en tiempo real de todos los SKUs en la sucursal indicada, incluyendo un resumen de cuáles están sin stock.
 
@@ -132,17 +270,18 @@ Esta superposición permite que el agente los identifique como sustitutos adecua
 
 ### Pasos para subir el catálogo
 
-1. Dentro del agente, dirigite a la sección [`Knowledge`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/knowledge).
-2. Hacé clic en el botón [`Add Source`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/index.html?id=8924ea03-22e4-4b6f-94ab-6d25c7feb9e1&parentId=2&origin=6e582a5d-694b-4ec7-9859-ecdc12368314&swVersion=4&extensionId=IBM.bob-code&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app&purpose=webviewView).
-3. Seleccioná la opción para agregar una nueva base de conocimiento.
-4. En esta pantalla vas a ver las conexiones disponibles que se pueden integrar como fuente de conocimiento para el agente. Para este laboratorio, vamos a cargar un archivo local.
-5. Hacé clic en [`Upload Files`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/index.html?id=8924ea03-22e4-4b6f-94ab-6d25c7feb9e1&parentId=2&origin=6e582a5d-694b-4ec7-9859-ecdc12368314&swVersion=4&extensionId=IBM.bob-code&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app&purpose=webviewView).
-6. Seleccioná el archivo [`product-catalog`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/product-catalog).
-7. Hacé clic en [`Next`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/index.html?id=8924ea03-22e4-4b6f-94ab-6d25c7feb9e1&parentId=2&origin=6e582a5d-694b-4ec7-9859-ecdc12368314&swVersion=4&extensionId=IBM.bob-code&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app&purpose=webviewView).
-8. Ingresá el nombre [`enterprise_documents`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/enterprise_documents) y agregá una breve descripción.
-9. Hacé clic en [`Save`](vscode-webview://0hjanbl2bnk8ul0eelg5qih29rdeb2eelms4argv756c0ag7719r/index.html?id=8924ea03-22e4-4b6f-94ab-6d25c7feb9e1&parentId=2&origin=6e582a5d-694b-4ec7-9859-ecdc12368314&swVersion=4&extensionId=IBM.bob-code&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app&purpose=webviewView).
-10. Esperá unos minutos hasta que finalice la indexación.
-11. Verificá que el documento figure como disponible y listo para ser usado en búsquedas semánticas.
+1. Dentro del agente, dirigite a la sección **Knowledge**
+2. Hacé clic en el botón **Add Source**
+3. Seleccioná la opción para agregar una nueva base de conocimiento
+4. En esta pantalla vas a ver las conexiones disponibles que se pueden integrar como fuente de conocimiento para el agente. Para este laboratorio, vamos a cargar un archivo local
+5. Hacé clic en **Upload Files**
+6. Seleccioná el archivo **product-catalog.docx**
+7. Hacé clic en **Next**
+8. Ingresá el nombre **enterprise_documents** y agregá una breve descripción
+9. Creá una descripción como: "Esta knowledge base contiene un catálogo de laptops con sus principales especificaciones técnicas, casos de uso y características destacadas."
+10. Hacé clic en **Save**
+11. Esperá unos minutos hasta que finalice la indexación
+12. Verificá que el documento figure como disponible y listo para ser usado en búsquedas semánticas
 
 ## Probá el agente en la interfaz de watsonx Orchestrate
 
@@ -382,3 +521,28 @@ Esto permitió que el equipo de desarrollo se enfocara en:
 - Diseño impulsado por eventos
 
 En lugar de tareas de configuración de bajo nivel, demostrando cómo la **ingeniería de software asistida por IA** puede mejorar dramáticamente la productividad y consistencia.
+
+---
+
+# Troubleshooting
+
+## Error: Token expirado o faltante
+
+Si al ejecutar comandos del ADK de Orchestrate te aparece un mensaje como:
+
+```
+[ERROR] - The token found for environment 'labtech' is missing or expired.
+Use `orchestrate env activate labtech` to fetch a new one
+```
+
+**Solución:**
+
+Volvé a activar el ambiente ejecutando el siguiente comando:
+
+```bash
+orchestrate env activate [tu_nombre_del_env]
+```
+
+Cuando se te solicite, ingresá tu API Key de IBM Cloud.
+
+> **Nota:** Los tokens de autenticación tienen un tiempo de expiración. Si dejás de trabajar por un período prolongado, es normal que necesites reactivar el ambiente.
