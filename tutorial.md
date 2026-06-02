@@ -7,11 +7,10 @@ Antes de comenzar con el tutorial, completá los siguientes pasos :
 Cloná el repositorio oficial del tutorial y posicionate en la carpeta del proyecto:
 
 ```bash
-git clone https://github.com/IBM/oic-i-agentic-ai-tutorials
-cd oic-i-agentic-ai-tutorials/confluent-agents
+git clone https://github.com/ignacio-ibm00/Repo-TechSummit-Lab2.git
 ```
 
-> **Nota:** Todos los archivos mencionados en los pasos siguientes (`get_sku_availability.py`, `sku-availability-agents.yaml`, `Substitute_Finder_Agent.yaml`, `Store_Associate_Agent.yaml`, `product-catalog.docx`) se encuentran dentro de esta carpeta `confluent-agents`.
+> **Nota:** Todos los archivos mencionados en los pasos siguientes (`get_sku_availability.py`, `sku-availability-agents.yaml`, `Substitute_Finder_Agent.yaml`, `Store_Associate_Agent.yaml`, `product-catalog.docx`) se encuentran dentro de esta carpeta `confluent_agents`.
 
 ---
 
@@ -62,34 +61,41 @@ El ADK usa el concepto de "ambientes" para gestionar diferentes instancias de wa
 **a) Creá un nuevo ambiente:**
 
 ```bash
-orchestrate env create <nombre_del_ambiente>
+orchestrate env add -n <nombre_del_ambiente> -u <url-instancia-de-servicio>
 ```
 
-Reemplazá `<nombre_del_ambiente>` con un nombre descriptivo, por ejemplo: `labtech` o `mi-ambiente-wxo`
+Reemplazá `<nombre_del_ambiente>` con un nombre descriptivo, por ejemplo: `labtech` o `mi-ambiente-wxo` y `<url-instancia-de-servicio>` por la URL de tu instancia.
+
+> **¿Cómo obtener la URL de tu instancia?** 
+
+1. Accedé desde el dashboard de IBM Cloud: 👉 [https://cloud.ibm.com](https://cloud.ibm.com)
+
+2. Hacé clic en el menú de hamburguesa
+
+   ![Menú hamburguesa](assets/menu_hamburguesa.png)
+
+3. Seleccioná **Lista de recursos**
+
+   ![Lista de recursos](assets/lista_recursos.png)
+
+4. Seleccioná la instancia de **watsonx Orchestrate** dentro del menú desplegable "IA / Aprendizaje automático".
+
+   ![Selección de instancia](assets/seleccion_instancia.png)
+
+5. Copi la URL de la instancia de **watsonx Orchestrate** y reemplazá `<url-instancia-de-servicio>` con ella.
+
+   ![URL](assets/url.png)
 
 **b) Activá el ambiente:**
 
 ```bash
-orchestrate env add -n <nombre_del_ambiente> -u <url-instancia-de-servicio>
+orchestrate env activate <nombre_del_ambiente>
 ```
-
-> **¿Cómo obtener la URL de tu instancia?** En IBM Cloud, andá a: Menú hamburguesa → Lista de recursos → Seleccioná tu instancia de watsonx Orchestrate. La URL aparecerá en el panel de detalles. (Los pasos detallados con imágenes están en la sección "Accedé a watsonx Orchestrate" más adelante).
 
 **c) Ingresá tu API Key:**
 
 Cuando se te solicite, ingresá la **API Key de IBM Cloud** que creaste en el Prerrequisito 2.
 
-**d) Seleccioná tu instancia de watsonx Orchestrate:**
-
-El comando te mostrará una lista de instancias disponibles. Seleccioná la que vas a usar para este lab.
-
-**e) Verificá la configuración:**
-
-```bash
-orchestrate env list
-```
-
-Deberías ver tu ambiente listado y marcado como activo.
 
 > **Importante:** Guardá el nombre de tu ambiente, lo vas a necesitar si el token expira durante el lab (ver sección de Troubleshooting al final del tutorial).
 
@@ -110,8 +116,8 @@ La idea es que watsonx Orchestrate trabaje con datos operacionales actualizados 
 Ejecutá el siguiente comando para crear automáticamente los recursos necesarios:
 
 ```bash
-cd confluent_agents
-python3 setup_topic_with_samples.py
+cd Repo-TechSummit-Lab2/confluent_agents
+python setup_topic_with_samples.py
 ```
 
 Este comando generará:
@@ -135,19 +141,21 @@ Una **herramienta MCP** (Model Context Protocol) es la forma en que watsonx Orch
 
 El comando registra el script `get_sku_availability.py` como una herramienta llamada `sku-availability-checker`. Cuando un agente necesite consultar el stock, llamará a esta herramienta y devolverá los datos desde Kafka vía ksqlDB.
 
-Reemplazá `/Users/ahmedazraq/Documents/git/oic-i-agentic-ai-tutorials/confluent-agents` con la **ruta absoluta** de tu proyecto.
 
 ```bash
-orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --command "python3 get_sku_availability.py" --tools "*"
+orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --package-root "Repo-TechSummit-Lab2/confluent_agents" --command "python get_sku_availability.py" --tools "*"
 ```
 
 ## Importá el agente
 
 El archivo `sku-availability-agents.yaml` define el comportamiento del agente: su nombre, descripción, qué herramientas puede usar y cómo debe razonar. Importarlo registra ese agente en watsonx Orchestrate para que pueda ser desplegado y probado.
+Asegura de estar parado en la carpeta "Repo-TechSummit-Lab2/confluent_agents"
 
 ```bash
-orchestrate agents import -f sku-availability-agents.yaml
+orchestrate agents import -f sku-availability-agent.yaml
 ```
+
+> **Nota:** Si después de importar el agente no lo ves en la UI de watsonx Orchestrate, recargá la página (F5 o Ctrl+R).
 
 Una vez completada la importación, desplegá el agente desde la UI de watsonx Orchestrate para que quede activo:
 
@@ -165,7 +173,7 @@ Si es la primera vez que accedés a watsonx Orchestrate, seguí estos pasos:
 
    ![Lista de recursos](assets/lista_recursos.png)
 
-4. Seleccioná la instancia de **watsonx Orchestrate**
+4. Seleccioná la instancia de **watsonx Orchestrate** dentro del menú desplegable "IA / Aprendizaje automático".
 
    ![Selección de instancia](assets/seleccion_instancia.png)
 
@@ -173,24 +181,20 @@ Si es la primera vez que accedés a watsonx Orchestrate, seguí estos pasos:
 
    ![Launch watsonx Orchestrate](assets/launch_wxo.png)
 
-6. Andá a **Administrar agentes**
+6. Andá a **Crear**
 
    ![UI de watsonx Orchestrate](assets/wxo_ui.png)
 
 ## Desplegá el agente
 
-1. En el menú lateral izquierdo, hacé clic en **Build**
-2. Vas a ver el agente `SKU_Availability_Agent` que acabás de importar — hacé clic en él
-3. En la esquina superior derecha, hacé clic en **Deploy**
-4. Confirmá el despliegue en la ventana de **Pre-deployment summary**
+1. Vas a ver el agente `SKU_Availability_Agent` que acabás de importar — hacé clic en él
+   ![Paso 1: Hacer click en agente](assets/desplegar_agente.png)
+2. En la esquina superior derecha, hacé clic en **Desplegar**
+   ![Paso 2: Descplegar agente](assets/desplegar_agente.png)
+3. Confirmá el despliegue en la ventana de **Resumen previo al despliegue**
+   ![Paso 3: Confirmar despliegue](assets/deploy_resumen.png)
 
 ## Probá el agente
-
-Desde la sección **Administrar agentes**:
-
-1. Hacé clic en **SKU_Availability_Agent**
-2. Observá que la herramienta MCP ya está importada
-3. Revisá el comportamiento del agente
 
 **Pregunta de prueba:**
 
@@ -226,17 +230,19 @@ El **Agente Buscador de Sustitutos** está definido en un archivo YAML proporcio
 1. Ubicá el archivo de definición del agente: `Substitute_Finder_Agent.yaml`, en tu clon local del repositorio
 2. Importá el agente en watsonx Orchestrate usando el **Kit de Desarrollo de Agentes (ADK)**:
 
+Asegura de estar parado en la carpeta "Repo-TechSummit-Lab2/confluent_agents"
+
 ```bash
-cd confluent-agents
 orchestrate agents import -f Substitute_Finder_Agent.yaml
 ```
 
+> **Nota:** Si después de importar el agente no lo ves en la UI de watsonx Orchestrate, recargá la página (F5 o Ctrl+R).
+
 Una vez completada la importación, desplegá el agente desde la UI de watsonx Orchestrate para que quede activo:
 
-3. En el menú lateral izquierdo, hacé clic en **Build**
-4. Vas a ver el agente `Substitute_Finder_Agent` que acabás de importar — hacé clic en él
-5. En la esquina superior derecha, hacé clic en **Deploy**
-6. Confirmá el despliegue en la ventana de **Pre-deployment summary**
+5. Vas a ver el agente `Substitute_Finder_Agent` que acabás de importar — hacé clic en él
+5. En la esquina superior derecha, hacé clic en **Desplegar**
+6. Confirmá el despliegue en la ventana de **Resumen previo al despliegue**
 
 > En este punto, el agente está creado y desplegado, pero todavía no tiene acceso a documentos empresariales. En el siguiente paso, vas a adjuntar el catálogo de productos como su fuente de conocimiento.
 
@@ -270,18 +276,17 @@ Esta superposición permite que el agente los identifique como sustitutos adecua
 
 ### Pasos para subir el catálogo
 
-1. Dentro del agente, dirigite a la sección **Knowledge**
-2. Hacé clic en el botón **Add Source**
+1. Dentro del agente, dirigite a la sección **Conocimiento**
+2. Hacé clic en el botón **Añadir origen**
 3. Seleccioná la opción para agregar una nueva base de conocimiento
 4. En esta pantalla vas a ver las conexiones disponibles que se pueden integrar como fuente de conocimiento para el agente. Para este laboratorio, vamos a cargar un archivo local
-5. Hacé clic en **Upload Files**
+5. Hacé clic en **Cargar archivos**
 6. Seleccioná el archivo **product-catalog.docx**
 7. Hacé clic en **Next**
-8. Ingresá el nombre **enterprise_documents** y agregá una breve descripción
-9. Creá una descripción como: "Esta knowledge base contiene un catálogo de laptops con sus principales especificaciones técnicas, casos de uso y características destacadas."
-10. Hacé clic en **Save**
-11. Esperá unos minutos hasta que finalice la indexación
-12. Verificá que el documento figure como disponible y listo para ser usado en búsquedas semánticas
+8. Ingresá el nombre **enterprise_documents** y agregá una breve descripción como: "Esta knowledge base contiene un catálogo de laptops con sus principales especificaciones técnicas, casos de uso y características destacadas."
+9. Hacé clic en **Save**
+10. Esperá unos minutos hasta que finalice la indexación
+11. Verificá que el documento figure como disponible y listo para ser usado en búsquedas semánticas
 
 ## Probá el agente en la interfaz de watsonx Orchestrate
 
@@ -345,17 +350,19 @@ El **Agente Asociado de Tienda** está definido usando un archivo de configuraci
 1. Ubicá el archivo de definición del agente: `Store_Associate_Agent.yaml`, en la misma carpeta `confluent-agents` en el repositorio que clonaste anteriormente
 2. Importá el agente usando el **Kit de Desarrollo de Agentes**:
 
+Asegura de estar parado en la carpeta "Repo-TechSummit-Lab2/confluent_agents"
+
 ```bash
-cd confluent-agents
 orchestrate agents import -f Store_Associate_Agent.yaml
 ```
 
+> **Nota:** Si después de importar el agente no lo ves en la UI de watsonx Orchestrate, recargá la página (F5 o Ctrl+R).
+
 Una vez completada la importación, desplegá el agente desde la UI de watsonx Orchestrate para que quede activo:
 
-3. En el menú lateral izquierdo, hacé clic en **Build**
-4. Vas a ver el agente `Store_Associate_Agent` que acabás de importar — hacé clic en él
-5. En la esquina superior derecha, hacé clic en **Deploy**
-6. Confirmá el despliegue en la ventana de **Pre-deployment summary**
+3. Vas a ver el agente `Store_Associate_Agent` que acabás de importar — hacé clic en él
+4. En la esquina superior derecha, hacé clic en **Deploy**
+5. Confirmá el despliegue en la ventana de **Pre-deployment summary**
 
 ## Probá el agente
 
@@ -408,10 +415,13 @@ El agente está definido en el archivo `Customer_Shopping_Assistant.yaml` dentro
 
 1. Importá el agente usando el **Kit de Desarrollo de Agentes (ADK)**:
 
+Asegura de estar parado en la carpeta "Repo-TechSummit-Lab2/confluent_agents"
+
 ```bash
-cd confluent-agents
 orchestrate agents import -f Customer_Shopping_Assistant.yaml
 ```
+
+> **Nota:** Si después de importar el agente no lo ves en la UI de watsonx Orchestrate, recargá la página (F5 o Ctrl+R).
 
 2. Después de que se complete la importación, abrí la interfaz de **watsonx Orchestrate**, andá a **Administrar agentes** y hacé clic en **Asistente de Compra**
 
