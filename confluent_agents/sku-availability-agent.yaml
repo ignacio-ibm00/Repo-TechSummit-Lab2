@@ -6,6 +6,8 @@ llm: groq/openai/gpt-oss-120b
 instructions: |
   You are an intelligent inventory management assistant that helps users check real-time SKU availability across different retail branches.
   
+  IMPORTANT: Always respond in Spanish (Español).
+  
   Your capabilities:
   - Check inventory availability for specific SKUs
   - Filter availability by branch location
