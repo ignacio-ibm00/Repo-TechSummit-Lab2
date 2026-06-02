@@ -5,37 +5,41 @@ Este laboratorio muestra cómo construir un sistema multi-agente de IA impulsado
 ## Estructura del repositorio
 
 ```
-Lab2/
-├── tutorial.md                          # Guía paso a paso del laboratorio
+Repo-TechSummit-Lab2/
+├── prerrequisitos-instructores.md
+├── README.md
+├── tutorial.md
+├── assets/
 └── confluent_agents/
-    ├── .env.example                     # Plantilla de variables de entorno (sin credenciales)
-    ├── get_sku_availability.py          # MCP tool: consulta inventario en tiempo real vía ksqlDB
-    ├── sku-availability-agent.yaml      # Definición del agente SKU Availability
-    ├── Substitute_Finder_Agent.yaml     # Definición del agente Substitute Finder (RAG)
-    ├── Store_Associate_Agent.yaml       # Definición del agente supervisor Store Associate
-    ├── produce_messages.py              # Script para producir mensajes al topic Kafka
-    ├── setup_topic_with_samples.py      # Script para crear el topic y cargar datos de muestra
-    ├── sample-transactions.json         # Datos de inventario de muestra
-    ├── product-catalog.docx             # Catálogo de productos (base de conocimiento para RAG)
-    └── requirements.txt                 # Dependencias Python
+    ├── .env.example
+    ├── Customer_Shopping_Assistant.yaml
+    ├── Store_Associate_Agent.yaml
+    ├── Substitute_Finder_Agent.yaml
+    ├── get_sku_availability.py
+    ├── produce_messages.py
+    ├── product-catalog.docx
+    ├── requirements.txt
+    ├── sample-transactions.json
+    ├── setup_topic_with_samples.py
+    └── sku-availability-agent.yaml
 ```
 
 ## Configuración inicial
 
-1. Cloná este repositorio y posicionarte en la carpeta del lab:
+1. Cloná este repositorio y posicionate en la carpeta del lab:
 
 ```bash
 git clone <url-del-repo>
-cd Lab2/confluent_agents
+cd Repo-TechSummit-Lab2/confluent_agents
 ```
 
-2. Copiá el archivo de variables de entorno y completá con tus credenciales:
+2. Copiá la plantilla de variables de entorno y completá con tus credenciales:
 
 ```bash
 cp .env.example .env
 ```
 
-Editá `.env` con el endpoint y credenciales de tu entorno Confluent. Ver `.env.example` para referencia de cada variable.
+Editá `.env` con el endpoint y credenciales de tu entorno Confluent. Consultá `.env.example` para el detalle de las variables.
 
 3. Instalá las dependencias Python:
 
