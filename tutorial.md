@@ -61,15 +61,12 @@ Necesitás una API Key de IBM Cloud para autenticarte con watsonx Orchestrate de
 2. En el menú **Gestionar**, seleccioná **Acceso (IAM)**.
 
    ![Acceso a IAM](assets/cloud_inicio.png)
-
 3. En el menú **Claves de API**, hacé clic en **Crear**.
 
    ![Crear API Key](assets/crear_api_key.png)
-
 4. Ingresá un nombre para la API Key.
 
    ![Guardar API Key](assets/guardar_api_key.png)
-
 5. Hacé clic en **Crear**.
 6. Copiá y guardá la API Key en un lugar seguro.
 
@@ -106,15 +103,12 @@ Reemplazá:
 2. Abrí el menú de hamburguesa.
 
    ![Menú hamburguesa](assets/menu_hamburguesa.png)
-
 3. Seleccioná **Lista de recursos**.
 
    ![Lista de recursos](assets/lista_recursos.png)
-
 4. Seleccioná tu instancia de **watsonx Orchestrate** dentro de **IA / Aprendizaje automático**.
 
    ![Selección de instancia](assets/seleccion_instancia.png)
-
 5. Copiá la URL de la instancia.
 
    ![URL de instancia](assets/url.png)
@@ -133,7 +127,7 @@ Cuando se solicite, ingresá la IBM Cloud API Key que creaste previamente.
 
 Para más información, podés consultar la [documentación oficial del ADK](https://developer.watson-orchestrate.ibm.com/getting_started/installing).
 
-## 4. Configurar Confluent Cloud si no participaste del Lab 1
+## 4. Configurar Confluent si no participaste del Lab 1
 
 Este paso es **condicional**.
 
@@ -145,21 +139,7 @@ Si **no** participaste del Lab 1, ejecutá este paso para crear automáticamente
 
 Asegurate de tener un archivo `.env` dentro de `confluent_agents/` con las credenciales de Confluent Cloud. Podés usar `.env.example` como referencia.
 
-### 4.2. Crear el tópico y cargar datos de muestra
-
-Desde `Repo-TechSummit-Lab2/confluent_agents`, ejecutá:
-
-```bash
-python setup_topic_with_samples.py
-```
-
-Este comando crea y prepara:
-
-- El tópico Kafka `inventory.transactions`.
-- La configuración de procesamiento para mantener una vista de disponibilidad.
-- 20 transacciones de inventario de ejemplo.
-
-> **Nota:** Si el instructor ya te entregó un `.env` configurado, no modifiques sus valores salvo que te lo indiquen.
+### 4.2. *agregar ./setup.sh*
 
 ---
 
@@ -179,10 +159,10 @@ Al finalizar este paso, vas a tener:
 
 Una herramienta MCP expone una función externa para que un agente pueda invocarla. En este caso, la herramienta ejecuta `get_sku_availability.py`, que consulta disponibilidad de inventario usando Kafka y ksqlDB.
 
-Desde `Repo-TechSummit-Lab2/confluent_agents`, ejecutá:
+Desde `Repo-TechSummit-Lab2`, ejecutá:
 
 ```bash
-orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --package-root "." --command "python get_sku_availability.py" --tools "*"
+orchestrate toolkits add --kind mcp --name "sku-availability-checker" --description "Verificador de disponibilidad de inventario en tiempo real usando Confluent Kafka y ksqlDB" --language python --package-root "confluent_agents" --command "python get_sku_availability.py" --tools "*"
 ```
 
 ## 1.2. Importar el agente de disponibilidad
@@ -192,7 +172,7 @@ El archivo `sku-availability-agent.yaml` define el comportamiento del agente, su
 Ejecutá:
 
 ```bash
-orchestrate agents import -f sku-availability-agent.yaml
+orchestrate agents import -f confluent_agents/sku-availability-agent.yaml
 ```
 
 > **Nota:** Si después de importar el agente no lo ves en la UI de watsonx Orchestrate, recargá la página.
@@ -208,7 +188,6 @@ Si todavía no tenés abierta la interfaz:
 5. Hacé clic en **Iniciar watsonx Orchestrate**.
 
    ![Iniciar watsonx Orchestrate](assets/launch_wxo.png)
-
 6. En la UI, ingresá a **Crear**.
 
    ![UI de watsonx Orchestrate](assets/wxo_ui.png)
@@ -219,11 +198,9 @@ Si todavía no tenés abierta la interfaz:
 2. Abrilo desde la lista de agentes.
 
    ![Seleccionar agente](assets/seleccionar_agente.png)
-
 3. En la esquina superior derecha, hacé clic en **Desplegar**.
 
    ![Desplegar agente](assets/desplegar_agente.png)
-
 4. Confirmá el despliegue en la ventana de resumen.
 
    ![Confirmar despliegue](assets/deploy_resumen.png)
