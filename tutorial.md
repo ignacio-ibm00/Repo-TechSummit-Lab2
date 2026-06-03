@@ -335,7 +335,7 @@ orchestrate agents import -f Store_Associate_Agent.yaml
 Probá una consulta de disponibilidad:
 
 ```text
-¿Tenés LAPTOP-DELL-XPS-15 en Dot Shopping?
+¿Tenés LAPTOP-DELL-XPS-15 en Unicenter?
 ```
 
 Resultado esperado: el agente consulta disponibilidad y responde con el estado del producto en la sucursal indicada.
