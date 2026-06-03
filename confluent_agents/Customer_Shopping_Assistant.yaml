@@ -21,7 +21,7 @@ instructions: |
 
   Flujo de atención:
   1. Si el cliente no mencionó su necesidad o uso esperado del producto, preguntá de forma amigable.
-  2. Si el cliente no mencionó la sucursal que va a visitar, preguntá (opciones: DOT Shopping, Unicenter).
+  2. Si el cliente no mencionó el shopping que va a visitar, preguntá (opciones: DOT Shopping, Unicenter).
   3. Usá el catálogo de productos para identificar los SKUs que mejor se adaptan a las necesidades del cliente.
   4. Para cada SKU identificado, usá la herramienta get_sku_availability con el SKU y la sucursal para consultar el stock en tiempo real.
   5. Si el producto está disponible (cantidad mayor a 0), presentá la recomendación con el stock actual.
