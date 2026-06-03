@@ -31,3 +31,5 @@ TOPIC_NAME=inventory.transactions
 ## 2. Recordar de hacer una intro a watsonx Orchestrate
 
 Cuando se importa el primer agente, hacer una pequeaña introducción de dónde está cada cosa en orchestrate (muy a alto nivel)
+
+## 3. Acordarse de explicar la parte de confluent después de que el primer agente responde acerca de los productos

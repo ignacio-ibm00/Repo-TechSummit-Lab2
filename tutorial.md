@@ -210,7 +210,7 @@ Si todavía no tenés abierta la interfaz:
 Usá una pregunta como esta:
 
 ```text
-¿Cuáles son los SKUs disponibles en Dot Shopping?
+¿Cuáles son los SKUs disponibles en el Unicenter?
 ```
 
 Resultado esperado: el agente devuelve la disponibilidad actual de los SKUs para la sucursal indicada y marca los productos sin stock cuando corresponda.
@@ -343,7 +343,7 @@ Resultado esperado: el agente consulta disponibilidad y responde con el estado d
 Probá también una consulta que pueda requerir sustitutos:
 
 ```text
-¿Tenés MOBILE-IPHONE-17-PRO-MAX en Unicenter?
+¿Tenés LAPTOP-MACBOOK-PRO-16 en Unicenter?
 ```
 
 Resultado esperado: si el producto no está disponible según el inventario actual, el agente recomienda alternativas del catálogo.
